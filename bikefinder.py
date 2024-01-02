@@ -1,6 +1,22 @@
 import requests
 from bs4 import BeautifulSoup
 
+def load_headers(headerfile='./requestinfo.data'):
+    header_objects = {"user_agent": None, "accept": None}
+
+    with open(headerfile, 'r') as f:
+        data = f.readlines()
+
+    for i in range(len(data)):
+        item = data[i]
+        parts = item.split("=")
+        if 'user_agent' in item:
+            header_objects['user_agent'] = parts[1]
+        if 'accept' in item:
+            header_objects['accept'] = parts[1]
+
+    return header_objects
+
 def craigslist_scraper(city, category, keyword):
     base_url = f"https://{city}.craigslist.org"
     search_url = f"{base_url}/search/{category}?query={keyword}"
@@ -25,6 +41,4 @@ def craigslist_scraper(city, category, keyword):
     else:
         print(f"Failed to retrieve data. Status code: {response.status_code}")
 
-# Example usage
-craigslist_scraper("example-city", "forsale", "your-keyword")
 
